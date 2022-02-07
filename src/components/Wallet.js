@@ -13,6 +13,7 @@ const Wallet = (props) =>{
             let accounts = await window.ethereum.request({method: 'eth_requestAccounts'})
             accountChangedHandler(accounts[0])
             let web3 = new Web3(window.ethereum);
+            setButtonText('Logout')
 
             props.setProvider(web3)
         }
