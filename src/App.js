@@ -1,11 +1,10 @@
 import './App.css';
 import Navbar from './components/Navbar'
-import TokenCard from './components/TokenCard'
 import Cards from './components/Cards'
-import { Space, Row, Card, Typography, Col } from 'antd';
+import {  Typography } from 'antd';
 import { useState } from 'react';
-import Web3 from 'web3';
-const { Title, Paragraph, Text, Link } = Typography;
+
+const { Title, Paragraph } = Typography;
 
 function App() {
   const [web3, setWeb3] = useState(null)
@@ -23,7 +22,8 @@ function App() {
   return (
     <div >
       <Navbar setProvider={(provider) => handleProvider(provider)}
-        setUser={(user) => handleUser(user)}
+        setUser={(user) => handleUser(user)} 
+        style={{display:''}}
       ></Navbar>
 
       <div className='Title' style={{ background: "#B8F4FA" }}>

@@ -22,12 +22,7 @@ function Navbar(props) {
     <Menu.Item key="Docs" >
       Docs
     </Menu.Item>
-    <Menu.Item key="MetamaskBtn" >
-      <Wallet 
-        onChange= {(_address,_balance) =>onAddressChange(_address,_balance)} 
-        setProvider = {(provider) =>  props.setProvider(provider) } >
-      </Wallet>
-    </Menu.Item>
+
 
     <Menu.Item key="Address" >
       {address}
@@ -36,7 +31,12 @@ function Navbar(props) {
     <Menu.Item key="Balance" >
       {balance}
     </Menu.Item>
-    
+    <Menu.Item key="MetamaskBtn" >
+      <Wallet 
+        onChange= {(_address,_balance) =>onAddressChange(_address,_balance)} 
+        setProvider = {(provider) =>  props.setProvider(provider) } >
+      </Wallet>
+    </Menu.Item>
 
     </Menu>
     

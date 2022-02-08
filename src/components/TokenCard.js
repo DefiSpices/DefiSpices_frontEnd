@@ -1,4 +1,4 @@
-import { Form, Input, Button, Checkbox } from 'antd';
+import { Form, Input, Button } from 'antd';
 import { useEffect, useState } from 'react';
 import ErcFactory from '../contracts/ErcFactory.json'
 
@@ -24,10 +24,10 @@ function TokenCard(props) {
 
   const onFinish = async (values) => {
     let recipt = await contractInst.methods.createStandardToken(values.InitialSupply, values.TokenName, values.Symbol).send({ from: (props.user).toString() })
-    .on('receipt', function(receipt){
-      let tokenCreatedAddress = receipt.events.TokenCreated.returnValues._tokenAddress
-      updateTokenCreated(tokenCreatedAddress)
-    })
+    
+    let tokenCreatedAddress = recipt.events.TokenCreated.returnValues._tokenAddress
+    updateTokenCreated(tokenCreatedAddress)
+   
   };
 
   const onFinishFailed = (errorInfo) => {
@@ -58,13 +58,7 @@ function TokenCard(props) {
         <Input />
 
       </Form.Item>
-      {/* <Form.Item label = "Decimals"
-                     name="Decimals"
-                     rules={[{ required: true, message: 'Please input The Token Decimals!' }]}
-                     >
-            <Input />
 
-          </Form.Item> */}
       <Form.Item label="Initial Supply"
         name="InitialSupply"
         rules={[{ required: true, message: 'Please input The Token Initial Supply!' }]}
@@ -72,13 +66,7 @@ function TokenCard(props) {
         <Input />
 
       </Form.Item>
-      {/* <Form.Item label = "Total Supply"
-                     name="TotalSupply"
-                     rules={[{ required: true, message: 'Please input The Token Total Supply!' }]}
-                     >
-            <Input />
 
-          </Form.Item> */}
       <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
         <Button type="primary" htmlType="submit">
           Submit

@@ -5,7 +5,6 @@ import Web3 from "web3";
 
 const Wallet = (props) =>{
 
-    const [errorMessage, setErrorMessge] = useState(null)
     const [connButtonText, setButtonText] = useState('Connect Wallet')
 
     const connectWalletHandler = async ()=>{
@@ -17,9 +16,7 @@ const Wallet = (props) =>{
 
             props.setProvider(web3)
         }
-        else{
-            setErrorMessge('Install Metamask')
-        }
+ 
     }
     const accountChangedHandler= async(account)=>{
         props.onChange(account , await getUserBalance(account))
