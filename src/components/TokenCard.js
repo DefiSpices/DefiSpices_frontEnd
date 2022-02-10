@@ -1,17 +1,18 @@
-import { Form, Input, Button } from 'antd';
+import { Form, Input, Button, Select } from 'antd';
 import { useEffect, useState } from 'react';
 import ErcFactory from '../contracts/ErcFactory.json'
-
-const contractAddress = "0xe34CF5BF21f3c94CeA49dC753a7B24951dBd2Ed6"
+const { Option } = Select;
+const contractAddress = "0x89f1AD08A99340B7baDb9E08E4DD0a3783DE1CbB"
 
 
 
 function TokenCard(props) {
   const [contractInst, setContractInst] = useState(null)
 
-  const [tokenCreated,setTokenCreated] = useState(null)
+  const [tokenCreated, setTokenCreated] = useState(null)
+  const [tokenType, setTokenType] = useState('standard')
 
-  const updateTokenCreated = (_address)=>{
+  const updateTokenCreated = (_address) => {
     setTokenCreated(_address)
   }
 
@@ -23,13 +24,24 @@ function TokenCard(props) {
   }, [props.web3, props.user, tokenCreated])
 
   const onFinish = async (values) => {
-    let recipt = await contractInst.methods.createStandardToken(values.InitialSupply, values.TokenName, values.Symbol).send({ from: (props.user).toString() })
-    
+    let recipt
+    if (tokenType == 'standard'){
+      console.log('Creating Standard token')
+     recipt = await contractInst.methods.createStandardToken(values.InitialSupply, values.TokenName, values.Symbol).send({ from: (props.user).toString() })
+    }
+    if(tokenType == 'burnable'){
+      console.log('Creating burnable token')
+
+    recipt =  await contractInst.methods.createBurnableToken(values.InitialSupply, values.TokenName, values.Symbol).send({ from: (props.user).toString() })
+    }
     let tokenCreatedAddress = recipt.events.TokenCreated.returnValues._tokenAddress
     updateTokenCreated(tokenCreatedAddress)
-   
-  };
 
+  };
+  function handleChange(value) {
+    setTokenType(value)
+    
+  }
   const onFinishFailed = (errorInfo) => {
     console.log('Failed:', errorInfo);
   };
@@ -43,7 +55,19 @@ function TokenCard(props) {
       onFinish={onFinish}
       onFinishFailed={onFinishFailed}
       autoComplete="on">
-
+      <div>
+       <h2>Token Type</h2>
+      <Select  defaultValue="standard" style={{ width: 120 }} onChange={handleChange}  style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center"
+                    }}>
+        <Option value="burnable">Burnable ERC20</Option>
+        <Option value="lucy">Lucy</Option>
+    
+     
+      </Select>
+      </div>
       <Form.Item label="TokenName"
         name="TokenName"
         rules={[{ required: true, message: 'Please input The Token name!' }]}
@@ -72,9 +96,9 @@ function TokenCard(props) {
           Submit
         </Button>
       </Form.Item>
-      {tokenCreated ? <div>{ tokenCreated } </div> : <></>}
+      {tokenCreated ? <div>{tokenCreated} </div> : <></>}
     </Form>
-    
+
 
   );
 }
