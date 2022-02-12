@@ -25,14 +25,14 @@ function TokenCard(props) {
 
   const onFinish = async (values) => {
     let recipt
-    if (tokenType == 'standard'){
+    if (tokenType == 'standard') {
       console.log('Creating Standard token')
-     recipt = await contractInst.methods.createStandardToken(values.InitialSupply, values.TokenName, values.Symbol).send({ from: (props.user).toString() })
+      recipt = await contractInst.methods.createStandardToken(values.InitialSupply, values.TokenName, values.Symbol).send({ from: (props.user).toString() })
     }
-    if(tokenType == 'burnable'){
+    if (tokenType == 'burnable') {
       console.log('Creating burnable token')
 
-    recipt =  await contractInst.methods.createBurnableToken(values.InitialSupply, values.TokenName, values.Symbol).send({ from: (props.user).toString() })
+      recipt = await contractInst.methods.createBurnableToken(values.InitialSupply, values.TokenName, values.Symbol).send({ from: (props.user).toString() })
     }
     let tokenCreatedAddress = recipt.events.TokenCreated.returnValues._tokenAddress
     updateTokenCreated(tokenCreatedAddress)
@@ -40,7 +40,7 @@ function TokenCard(props) {
   };
   function handleChange(value) {
     setTokenType(value)
-    
+
   }
   const onFinishFailed = (errorInfo) => {
     console.log('Failed:', errorInfo);
@@ -56,17 +56,18 @@ function TokenCard(props) {
       onFinishFailed={onFinishFailed}
       autoComplete="on">
       <div>
-       <h2>Token Type</h2>
-      <Select  defaultValue="standard" style={{ width: 120 }} onChange={handleChange}  style={{
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center"
-                    }}>
-        <Option value="burnable">Burnable ERC20</Option>
-        <Option value="lucy">Lucy</Option>
-    
-     
-      </Select>
+        <h2>Token Type</h2>
+        <Select defaultValue="standard" style={{ width: 120 }} onChange={handleChange} style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center"
+        }}>
+          <Option value="standard">Standard ERC20</Option>
+
+          <Option value="burnable">Burnable ERC20</Option>
+
+
+        </Select>
       </div>
       <Form.Item label="TokenName"
         name="TokenName"
