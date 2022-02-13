@@ -2,7 +2,7 @@ import { Form, Input, Button, Select } from 'antd';
 import { useEffect, useState } from 'react';
 import ErcFactory from '../contracts/ErcFactory.json'
 const { Option } = Select;
-const contractAddress = "0x89f1AD08A99340B7baDb9E08E4DD0a3783DE1CbB"
+const contractAddress = "0x7f1a9ED4f54db678B767F0464977DfDbb1a9D877"
 
 
 
@@ -25,12 +25,17 @@ function TokenCard(props) {
 
   const onFinish = async (values) => {
     let recipt
-    if (tokenType == 'standard') {
+    if (tokenType === 'standard') {
       console.log('Creating Standard token')
       recipt = await contractInst.methods.createStandardToken(values.InitialSupply, values.TokenName, values.Symbol).send({ from: (props.user).toString() })
     }
-    if (tokenType == 'burnable') {
+    if (tokenType === 'burnable') {
       console.log('Creating burnable token')
+
+      recipt = await contractInst.methods.createBurnableToken(values.InitialSupply, values.TokenName, values.Symbol).send({ from: (props.user).toString() })
+    }
+    if (tokenType === 'mintable') {
+      console.log('Creating mintable token')
 
       recipt = await contractInst.methods.createBurnableToken(values.InitialSupply, values.TokenName, values.Symbol).send({ from: (props.user).toString() })
     }
@@ -57,14 +62,16 @@ function TokenCard(props) {
       autoComplete="on">
       <div>
         <h2>Token Type</h2>
-        <Select defaultValue="standard" style={{ width: 120 }} onChange={handleChange} style={{
+        <Select defaultValue="standard" onChange={handleChange} style={{
           display: "flex",
           justifyContent: "center",
-          alignItems: "center"
+          alignItems: "center",
+          width: 120
         }}>
           <Option value="standard">Standard ERC20</Option>
 
           <Option value="burnable">Burnable ERC20</Option>
+          <Option value="mintable">Mintable ERC20</Option>
 
 
         </Select>
