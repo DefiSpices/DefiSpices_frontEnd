@@ -37,7 +37,7 @@ function TokenCard(props) {
     if (tokenType === 'mintable') {
       console.log('Creating mintable token')
 
-      recipt = await contractInst.methods.createBurnableToken(values.InitialSupply, values.TokenName, values.Symbol).send({ from: (props.user).toString() })
+      recipt = await contractInst.methods.createMintableToken(values.InitialSupply, values.TokenName, values.Symbol).send({ from: (props.user).toString() })
     }
     let tokenCreatedAddress = recipt.events.TokenCreated.returnValues._tokenAddress
     updateTokenCreated(tokenCreatedAddress)
