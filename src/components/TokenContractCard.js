@@ -2,6 +2,7 @@ import { Col, List, Input, Button, Form } from "antd";
 import { useEffect, useState } from "react";
 import ERC20_Standard from "../contracts/ERC20_Standard.json"
 import ERC20_Burnable from "../contracts/ERC20_Burnable.json"
+import ERC20_Mintable from "../contracts/ERC20_Mintable.json"
 
 const { Search } = Input
 
@@ -18,7 +19,16 @@ const TokenContract = (props) => {
     const [allowance, setallowance] = useState(null);
 
     const burn = async(values)=>{
-        let recipt = await ercContract.methods.burn(values.amount).send({ from: (props.currentUser).toString() })
+        let ercContractBurnable = new props.web3.eth.Contract(ERC20_Burnable.abi, (props.tokenAddress).toString())
+
+        let recipt = await ercContractBurnable.methods.burn(values.amount).send({ from: (props.currentUser).toString() })
+        console.log(recipt)
+    }
+
+    const mint = async(values)=>{
+        let ercContractMintable = new props.web3.eth.Contract(ERC20_Mintable.abi, (props.tokenAddress).toString())
+
+        let recipt = await ercContractMintable.methods.mint(values.amount).send({ from: (props.currentUser).toString() })
         console.log(recipt)
     }
 
@@ -62,7 +72,7 @@ const TokenContract = (props) => {
     }
 
     async function loadContract() {
-        let ercContract = new props.web3.eth.Contract(ERC20_Burnable.abi, (props.tokenAddress).toString())
+        let ercContract = new props.web3.eth.Contract(ERC20_Standard.abi, (props.tokenAddress).toString())
         let _decimals = await ercContract.methods.decimals().call()
         let _name = await ercContract.methods.name().call()
         let _symbol = await ercContract.methods.symbol().call()
@@ -379,6 +389,35 @@ const TokenContract = (props) => {
 
                     <Form.Item >
                         <Button type="danger" htmlType="submit" >Burn</Button>
+                    </Form.Item>
+                </Form>
+
+            </List.Item>
+
+            <List.Item >
+
+            <Form
+                    name="mint"
+                    onFinish={mint}
+                    labelCol={{ span: 8 }}
+                    wrapperCol={{ span: 16 }}
+
+                >
+                    <h2 style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center"
+                    }} >Mint</h2>
+                    <Form.Item label="amount"
+                        name="amount"
+                        rules={[{ required: true, message: 'you need to provide the amount' }]}
+                    >
+                        <Input />
+                    </Form.Item>
+
+
+                    <Form.Item >
+                        <Button type="danger" htmlType="submit" >Mint</Button>
                     </Form.Item>
                 </Form>
 
