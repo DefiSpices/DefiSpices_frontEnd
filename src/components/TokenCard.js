@@ -2,7 +2,7 @@ import { Form, Input, Button, Select } from 'antd';
 import { useEffect, useState } from 'react';
 import ErcFactory from '../contracts/ErcFactory.json'
 const { Option } = Select;
-const contractAddress = "0x7f1a9ED4f54db678B767F0464977DfDbb1a9D877"
+const contractAddress = "0x059dD02763798DcE07d33C3A64294922d13921AB"
 
 
 
@@ -39,6 +39,17 @@ function TokenCard(props) {
 
       recipt = await contractInst.methods.createMintableToken(values.InitialSupply, values.TokenName, values.Symbol).send({ from: (props.user).toString() })
     }
+    if (tokenType === 'capped') {
+      console.log('Creating capped token')
+
+      recipt = await contractInst.methods.createCappedToken(values.InitialSupply, values.TokenName, values.Symbol, values.cap).send({ from: (props.user).toString() })
+    }
+    if (tokenType === 'pepper') {
+      console.log('Creating pepper token')
+
+      recipt = await contractInst.methods.createPepperToken(values.InitialSupply, values.TokenName, values.Symbol).send({ from: (props.user).toString() })
+    }
+   
     let tokenCreatedAddress = recipt.events.TokenCreated.returnValues._tokenAddress
     updateTokenCreated(tokenCreatedAddress)
 
@@ -72,6 +83,8 @@ function TokenCard(props) {
 
           <Option value="burnable">Burnable ERC20</Option>
           <Option value="mintable">Mintable ERC20</Option>
+          <Option value="capped">Capped ERC20</Option>
+          <Option value="pepper">Pepper ERC20(Mintable + burnable)</Option>
 
 
         </Select>
@@ -99,11 +112,25 @@ function TokenCard(props) {
 
       </Form.Item>
 
+
+      {tokenType === 'capped' ?
+        <Form.Item label="cap"
+          name="cap"
+          rules={[{ required: true, message: 'Please input The Token the max cap!' }]}
+        >
+          <Input />
+
+        </Form.Item>
+        : <></>
+      }
+
       <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
         <Button type="primary" htmlType="submit">
           Submit
         </Button>
       </Form.Item>
+
+
       {tokenCreated ? <div>{tokenCreated} </div> : <></>}
     </Form>
 
